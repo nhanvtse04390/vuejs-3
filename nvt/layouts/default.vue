@@ -1,29 +1,36 @@
 <template>
-  <div>
+  <div class="flex flex-col min-h-screen">
     <!-- Header -->
-    <header class="bg-gray-800 text-white p-4">
-      <h1 class="text-2xl">My Nuxt Application</h1>
+    <header class="bg-custom-100 text-white p-4 shadow-md">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl font-bold pl-8">My Nuxt Application</h1>
+      </div>
     </header>
 
-    <!-- Sidebar (optional) -->
-    <aside class="bg-gray-100 w-64 p-4 fixed h-full">
+    <!-- Sidebar -->
+    <aside class="bg-custom-100 w-64 p-4 pt-20 fixed h-full">
       <nav>
-        <ul>
-          <li><NuxtLink to="/">Home</NuxtLink></li>
-          <li><NuxtLink to="/about">About</NuxtLink></li>
-          <li><NuxtLink to="/contact">Contact</NuxtLink></li>
+        <ul class="space-y-4">
+          <li><NuxtLink to="/" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">Home</NuxtLink></li>
+          <li><NuxtLink to="/about" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">About</NuxtLink></li>
+          <li><NuxtLink to="/contact" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">Contact</NuxtLink></li>
+          <li><NuxtLink to="/login" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">Login</NuxtLink></li>
         </ul>
       </nav>
     </aside>
 
-    <!-- Main content area -->
-    <main class="ml-64 p-8">
-      <slot />
-    </main>
+    <div class="flex flex-grow">
+      <!-- Main content area -->
+      <main class="flex-grow p-2 ml-64"> <!-- Thêm ml-64 để tránh đè lên sidebar -->
+        <slot />
+      </main>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white p-4 mt-8 text-center">
-      &copy; 2024 My Nuxt Application
+    <footer class="bg-gray-950 text-white p-4 mt-8">
+      <div class="container mx-auto text-center">
+        &copy; 2024 My Nuxt Application
+      </div>
     </footer>
   </div>
 </template>
@@ -52,3 +59,6 @@ footer {
   width: 100%;
 }
 </style>
+
+<script setup lang="ts">
+</script>
