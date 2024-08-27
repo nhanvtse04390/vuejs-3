@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="bg-custom-100 text-white p-4 shadow-md">
       <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-3xl font-bold pl-8">My Nuxt Application</h1>
+        <h1 class="text-3xl font-bold pl-12">My Nuxt Application</h1>
       </div>
     </header>
 
@@ -14,7 +14,7 @@
           <li><NuxtLink to="/" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">Home</NuxtLink></li>
           <li><NuxtLink to="/about" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">About</NuxtLink></li>
           <li><NuxtLink to="/contact" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">Contact</NuxtLink></li>
-          <li><NuxtLink to="/login" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold">Login</NuxtLink></li>
+          <li><NuxtLink to="/login" class="block text-custom-200 hover:bg-custom-dark rounded-r-lg p-2 font-bold" >Login</NuxtLink></li>
         </ul>
       </nav>
     </aside>

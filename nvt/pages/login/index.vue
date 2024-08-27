@@ -1,44 +1,45 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="w-full max-w-md p-8 bg-white shadow-md rounded-lg">
-      <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
-
-      <form @submit.prevent="handleLogin">
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2" for="email">Email</label>
-          <input
-              v-model="email"
-              type="email"
-              id="email"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-          />
+  <section class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+      <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            Đăng nhập tài khooản của bạn
+          </h1>
+          <form @submit.prevent="handleLogin" class="space-y-4 md:space-y-6">
+            <div>
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên đăng nhập</label>
+              <input
+                  v-model="email"
+                  type="text"
+                  id="email"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="name@company.com"
+                  required
+              />
+            </div>
+            <div>
+              <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu</label>
+              <input
+                  v-model="password"
+                  type="password"
+                  id="password"
+                  placeholder="••••••••"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+              />
+            </div>
+            <button
+                type="submit"
+                class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            >
+              Đăng nhập
+            </button>
+          </form>
         </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700 mb-2" for="password">Password</label>
-          <input
-              v-model="password"
-              type="password"
-              id="password"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-          />
-        </div>
-
-        <button
-            type="submit"
-            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          Login
-        </button>
-      </form>
-
-      <p class="text-center mt-4 text-gray-600">
-        Don't have an account? <NuxtLink to="/register" class="text-blue-500">Register</NuxtLink>
-      </p>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -52,11 +53,14 @@ const email = ref('')
 const password = ref('')
 const router = useRouter()
 
-const handleLogin = () => {
-  // Thay thế bằng logic đăng nhập thực tế của bạn
+const config = useRuntimeConfig()
+
+const { data, pending, error } = useFetch(`${config.public.apiBase}/users`)
+
+const handleLogin = async () => {
   if (email.value === 'admin@example.com' && password.value === 'password') {
     alert('Login successful!')
-    router.push('/') // Chuyển hướng về trang chủ sau khi đăng nhập thành công
+    await router.push('/') // Chuyển hướng về trang chủ sau khi đăng nhập thành công
   } else {
     alert('Invalid email or password')
   }
@@ -64,5 +68,5 @@ const handleLogin = () => {
 </script>
 
 <style scoped>
-/* Custom styles cho trang login */
+/* Custom styles cho trang login nếu cần */
 </style>
