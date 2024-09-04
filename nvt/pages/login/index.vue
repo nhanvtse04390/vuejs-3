@@ -55,15 +55,14 @@ const router = useRouter()
 
 const config = useRuntimeConfig()
 
-const { data, pending, error } = useFetch(`${config.public.apiBase}/users`)
-
 const handleLogin = async () => {
-  if (email.value === 'admin@example.com' && password.value === 'password') {
-    alert('Login successful!')
-    await router.push('/') // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-  } else {
-    alert('Invalid email or password')
-  }
+    const { data, error: fetchError } = await useFetch('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({ username: email.value, password: password.value }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    console.log("data",data)
+    console.log("fetchError",fetchError)
 }
 </script>
 
