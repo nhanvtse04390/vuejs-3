@@ -43,27 +43,41 @@
 </template>
 
 <script setup lang="ts">
+import type {AxiosError} from "axios";
+
 definePageMeta({
   layout: false,
 })
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { loginUser } from '@/services/userService';
+import { toast } from "vue3-toastify";
 
 const email = ref('')
 const password = ref('')
 const router = useRouter()
 
-const config = useRuntimeConfig()
-
 const handleLogin = async () => {
-    const { data, error: fetchError } = await useFetch('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({ username: email.value, password: password.value }),
-      headers: { 'Content-Type': 'application/json' }
-    })
-    console.log("data",data)
-    console.log("fetchError",fetchError)
-}
+  try {
+    const response = await loginUser({ username: email.value, password: password.value });
+    localStorage.setItem('token', response.data); // Save the token to localStorage
+    toast.success("Đăng nhập thành công!");
+
+    // Đợi 500ms rồi chuyển hướng
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
+  } catch (err) {
+    const error = err as AxiosError; // Ép kiểu err thành AxiosError
+    // Kiểm tra nếu response từ backend có message
+    if (error.response && error.response.data) {
+      const { message } = error.response.data as { message: string }; // Giả sử message là string
+      toast.error(message || "Đăng nhập thất bại!");
+    } else {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại!");
+    }
+  }
+
+};
 </script>
 
 <style scoped>

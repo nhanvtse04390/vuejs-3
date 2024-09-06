@@ -7,6 +7,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.API_BASE_URL,
-    }
+    },
+    plugins: [
+      '~/plugins/vue3-toastify.client.js',
+    ],
   },
 })
