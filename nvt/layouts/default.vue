@@ -30,7 +30,8 @@
     <!-- Header -->
     <header class="header">
       <div class="header-content">
-        <span class="header-title uppercase">{{ titlePage }}</span>
+        <component :is="titlePage.icon" class="icon"/>
+        <span class="header-title uppercase">{{ titlePage.title }}</span>
       </div>
     </header>
 
@@ -55,7 +56,7 @@
                 <li
                     v-for="(submenu, subIndex) in menu.submenus"
                     :key="subIndex"
-                    @click="handleSubmenuClick(submenu.link, submenu.title)"
+                    @click="handleSubmenuClick(submenu.link, submenu.title, submenu.icon)"
                     class="submenu-item"
                 >
                   <component :is="submenu.icon" class="icon"/>
@@ -105,10 +106,11 @@ const toggleSubmenu = (index: number) => {
   submenuVisible.value = submenuVisible.value === index ? null : index;
 };
 
-const titlePage = ref('');
+const titlePage = ref({ title: 'Phần mềm quản lý kho lạnh', icon: CubeIcon },);
 
-const setTitlePage = (title: string) => {
-  titlePage.value = title;
+const setTitlePage = (title: string,icon: string) => {
+  titlePage.value.title = title;
+  titlePage.value.icon = icon;
 };
 
 // Danh sách các mục menu và submenu
@@ -166,8 +168,8 @@ const menuItems = ref([
 const router = useRouter();
 
 // Handle submenu click
-const handleSubmenuClick = (link: string, title: string) => {
-  setTitlePage(title);
+const handleSubmenuClick = (link: string, title: string, icon: string) => {
+  setTitlePage(title,icon);
   router.push(link);
 };
 </script>
@@ -216,6 +218,9 @@ const handleSubmenuClick = (link: string, title: string) => {
 .header-content {
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header-title {
