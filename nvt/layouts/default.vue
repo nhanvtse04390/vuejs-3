@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container">
     <!-- Toggle Button -->
-    <button @click="toggleSidebar" class="header-toggle">
+    <button @click="toggleSidebar" class="header-toggle flex uppercase font-bold">
       <svg
           v-if="isSidebarOpen"
           xmlns="http://www.w3.org/2000/svg"
@@ -22,6 +22,9 @@
       >
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
+      <span>
+          menu
+      </span>
     </button>
 
     <!-- Header -->
@@ -183,18 +186,15 @@ const handleSubmenuClick = (link: string, title: string) => {
   position: absolute;
   top: 1rem; /* Adjust as needed */
   left: 1rem; /* Adjust as needed */
-  background-color: #ffffff;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
   transition: background-color 0.3s;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000; /* Ensure it's above other elements */
 }
 
 .header-toggle:hover {
-  background-color: #dbe2e8;
+  //background-color: #dbe2e8;
 }
 
 .icon {
@@ -210,6 +210,7 @@ const handleSubmenuClick = (link: string, title: string) => {
   width: 100%;
   position: relative; /* Position relative to place toggle button correctly */
   z-index: 999; /* Ensure header is below the toggle button */
+  display: flex;
 }
 
 .header-content {
