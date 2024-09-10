@@ -1,40 +1,27 @@
 <template>
   <div class="layout-container">
-    <!-- Toggle Button -->
-    <button @click="toggleSidebar" class="header-toggle flex uppercase font-bold">
-      <svg
-          v-if="isSidebarOpen"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          class="icon"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-      <svg
-          v-else
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          class="icon"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-      <span>
-          menu
-      </span>
-    </button>
-
     <!-- Header -->
     <header class="header">
+      <button @click="toggleSidebar" class="flex uppercase font-bold">
+        <component :is="Bars3Icon" class="icon"/>
+        <span class="hover:text-[#ff6347]">
+          menu
+      </span>
+      </button>
       <div class="header-content">
         <component :is="titlePage.icon" class="icon"/>
         <span class="header-title uppercase">{{ titlePage.title }}</span>
       </div>
+      <div class="relative">
+        <component @click="showDetailUser" :is="UserCircleIcon" class="w-8 h-8 p-0 m-0"/>
+        <nav v-if="isShowDetailUser" class="user-nav">
+          <ul>
+            <li> <component :is="InformationCircleIcon" class="icon"/>Thông tin</li>
+            <li @click="handleLogout"><component :is="ArrowRightOnRectangleIcon" class="icon"/>Đăng xuất</li>
+          </ul>
+        </nav>
+      </div>
     </header>
-
     <!-- Main container -->
     <div class="main-container">
       <!-- Sidebar -->
@@ -84,12 +71,12 @@
 </template>
 
 <script setup lang="ts">
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Cog6ToothIcon, CogIcon, WrenchScrewdriverIcon,PlusCircleIcon,MinusCircleIcon,ReceiptRefundIcon,
-  CubeIcon
+  CubeIcon,Bars3Icon, UserCircleIcon, InformationCircleIcon,ArrowRightOnRectangleIcon,
 } from '@heroicons/vue/24/outline';
-
 // State quản lý mở hoặc đóng sidebar
 const isSidebarOpen = ref(true);
 
@@ -172,6 +159,40 @@ const handleSubmenuClick = (link: string, title: string, icon: string) => {
   setTitlePage(title,icon);
   router.push(link);
 };
+
+const isShowDetailUser = ref(false)
+
+const showDetailUser = () => {
+  isShowDetailUser.value = !isShowDetailUser.value
+};
+
+
+const handleClickOutside = (event) => {
+  const menu = document.querySelector('.user-nav');
+  if (menu && !menu.contains(event.target) && !event.target.closest('.relative')) {
+    isShowDetailUser.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+
+const handleLogout = () => {
+  try {
+    // Xóa token khỏi localStorage hoặc sessionStorage
+    localStorage.removeItem('token');
+
+    // Chuyển hướng về trang đăng nhập hoặc trang chính
+    window.location.href = '/login'; // Hoặc sử dụng router.push('/login') nếu sử dụng Vue Router
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+};
 </script>
 
 <style scoped>
@@ -181,22 +202,6 @@ const handleSubmenuClick = (link: string, title: string, icon: string) => {
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden; /* Prevent horizontal scroll */
-}
-
-/* Toggle Button */
-.header-toggle {
-  position: absolute;
-  top: 1rem; /* Adjust as needed */
-  left: 1rem; /* Adjust as needed */
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: background-color 0.3s;
-  z-index: 1000; /* Ensure it's above other elements */
-}
-
-.header-toggle:hover {
-  //background-color: #dbe2e8;
 }
 
 .icon {
@@ -213,6 +218,8 @@ const handleSubmenuClick = (link: string, title: string, icon: string) => {
   position: relative; /* Position relative to place toggle button correctly */
   z-index: 999; /* Ensure header is below the toggle button */
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-content {
@@ -260,6 +267,10 @@ const handleSubmenuClick = (link: string, title: string, icon: string) => {
   margin-bottom: 0.5rem;
 }
 
+.menu-title:hover {
+  color: #ff6347; /* Light gray-blue */
+}
+
 .menu-title {
   font-weight: bold;
   padding: 0.5rem;
@@ -281,8 +292,7 @@ const handleSubmenuClick = (link: string, title: string, icon: string) => {
 }
 
 .submenu-item {
-  padding: 0.5rem;
-  padding-left: 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
   cursor: pointer;
   background-color: transparent; /* Very light blue */
   transition: background-color 0.3s;
@@ -320,5 +330,31 @@ const handleSubmenuClick = (link: string, title: string, icon: string) => {
   height: 24px;
   margin-right: 8px; /* Khoảng cách giữa icon và tiêu đề */
   color: #4a5568; /* Màu của icon */
+}
+
+.user-nav {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  background-color: #e2e8f0;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.user-nav li {
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 3px;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  display: flex;
+}
+
+.user-nav li:hover {
+  color: #ff6347;
+}
+
+.user-nav li:last-child {
+  margin-bottom: 0;
 }
 </style>

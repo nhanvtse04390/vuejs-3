@@ -4,7 +4,7 @@
     <el-table
         :data="rowData"
         style="width: 100%; overflow-x: auto;"
-        @cell-click="handleCellClick"
+        @cell-click=""
     >
       <el-table-column
           prop="id"
@@ -130,7 +130,9 @@
 import { ref, onMounted } from 'vue';
 import { getWarehouseLayout } from '@/services/warehouseLayoutService.js';
 import 'element-plus/dist/index.css';
-
+definePageMeta({
+  middleware: 'auth',
+});
 // Row Data
 const rowData = ref([]);
 
