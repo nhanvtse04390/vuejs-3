@@ -6,8 +6,14 @@
         <component :is="Bars3Icon" class="icon"/>
         <span class="hover:text-[#ff6347]">
           menu
-      </span>
+        </span>
       </button>
+      <NuxtLink to="/" @click="" class="flex uppercase font-bold pl-4">
+        <component :is="HomeIcon " class="icon"/>
+        <span class="hover:text-[#ff6347]">
+          Trang chủ
+        </span>
+      </NuxtLink>
       <div class="header-content">
         <component :is="titlePage.icon" class="icon"/>
         <span class="header-title uppercase">{{ titlePage.title }}</span>
@@ -16,8 +22,14 @@
         <component @click="showDetailUser" :is="UserCircleIcon" class="w-8 h-8 p-0 m-0"/>
         <nav v-if="isShowDetailUser" class="user-nav">
           <ul>
-            <li> <component :is="InformationCircleIcon" class="icon"/>Thông tin</li>
-            <li @click="handleLogout"><component :is="ArrowRightOnRectangleIcon" class="icon"/>Đăng xuất</li>
+            <li>
+              <component :is="InformationCircleIcon" class="icon"/>
+              Thông tin
+            </li>
+            <li @click="handleLogout">
+              <component :is="ArrowRightOnRectangleIcon" class="icon"/>
+              Đăng xuất
+            </li>
           </ul>
         </nav>
       </div>
@@ -57,7 +69,7 @@
 
       <!-- Content Area -->
       <main class="content">
-        <slot />
+        <slot/>
       </main>
     </div>
 
@@ -72,10 +84,11 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Cog6ToothIcon, CogIcon, WrenchScrewdriverIcon,PlusCircleIcon,MinusCircleIcon,ReceiptRefundIcon,
-  CubeIcon,Bars3Icon, UserCircleIcon, InformationCircleIcon,ArrowRightOnRectangleIcon,
+import {ref} from 'vue';
+import {useRouter, useRoute} from 'vue-router';
+import {
+  Cog6ToothIcon, CogIcon, WrenchScrewdriverIcon, PlusCircleIcon, MinusCircleIcon, ReceiptRefundIcon,
+  CubeIcon, Bars3Icon, UserCircleIcon, InformationCircleIcon, ArrowRightOnRectangleIcon, HomeIcon,
 } from '@heroicons/vue/24/outline';
 // State quản lý mở hoặc đóng sidebar
 const isSidebarOpen = ref(true);
@@ -93,9 +106,9 @@ const toggleSubmenu = (index: number) => {
   submenuVisible.value = submenuVisible.value === index ? null : index;
 };
 
-const titlePage = ref({ title: 'Phần mềm quản lý kho lạnh', icon: CubeIcon },);
+const titlePage = ref({title: 'Phần mềm quản lý kho lạnh', icon: CubeIcon},);
 
-const setTitlePage = (title: string,icon: string) => {
+const setTitlePage = (title: string, icon: string) => {
   titlePage.value.title = title;
   titlePage.value.icon = icon;
 };
@@ -106,57 +119,69 @@ const menuItems = ref([
     title: 'Quản trị',
     icon: Cog6ToothIcon, // Tên icon cho mục menu chính
     submenus: [
-      { title: 'Sơ đồ kho', link: '/warehouse-layout', icon: CubeIcon },
-      { title: 'Submenu 2', link: '/', icon: 'menu-icon-2' },
+      {title: 'Sơ đồ kho', link: '/warehouse-layout', icon: CubeIcon},
+      {title: 'Submenu 2', link: '/', icon: 'menu-icon-2'},
     ],
   },
   {
     title: 'Khai báo hệ thống',
     icon: WrenchScrewdriverIcon, // Tên icon cho mục menu chính
     submenus: [
-      { title: 'Submenu 1', link: '/about', icon: 'about-icon-1' },
-      { title: 'Submenu 2', link: '/about', icon: 'about-icon-2' },
+      {title: 'Submenu 1', link: '/about', icon: 'about-icon-1'},
+      {title: 'Submenu 2', link: '/about', icon: 'about-icon-2'},
     ],
   },
   {
     title: 'Quản lý vận hành kho',
     icon: CogIcon, // Tên icon cho mục menu chính
     submenus: [
-      { title: 'Submenu 1', link: '/contact', icon: 'about-icon-1' },
-      { title: 'Submenu 2', link: '/contact', icon: 'about-icon-1' },
+      {title: 'Submenu 1', link: '/contact', icon: 'about-icon-1'},
+      {title: 'Submenu 2', link: '/contact', icon: 'about-icon-1'},
     ],
   },
   {
     title: 'Tạo phiếu nhập hàng',
     icon: PlusCircleIcon,
     submenus: [
-      { title: 'Submenu 1', link: '/login' },
-      { title: 'Submenu 2', link: '/login' },
+      {title: 'Submenu 1', link: '/login'},
+      {title: 'Submenu 2', link: '/login'},
     ],
   },
   {
     title: 'Tạo phiếu xuất hàng',
-    icon: MinusCircleIcon ,
+    icon: MinusCircleIcon,
     submenus: [
-      { title: 'Submenu 1', link: '/login' },
-      { title: 'Submenu 2', link: '/login' },
+      {title: 'Submenu 1', link: '/login'},
+      {title: 'Submenu 2', link: '/login'},
     ],
   },
   {
     title: 'Chi tiết nhập xuất',
-    icon: ReceiptRefundIcon ,
+    icon: ReceiptRefundIcon,
     submenus: [
-      { title: 'Submenu 1', link: '/login' },
-      { title: 'Submenu 2', link: '/login' },
+      {title: 'Submenu 1', link: '/login'},
+      {title: 'Submenu 2', link: '/login'},
     ],
   },
 ]);
 
 const router = useRouter();
+const route = useRoute();
+
+// Theo dõi sự thay đổi của URL
+watch(
+    () => route.fullPath, // Theo dõi sự thay đổi của đường dẫn đầy đủ
+    (newUrl, oldUrl) => {
+      console.log("newUrl",newUrl)
+      if(newUrl === '/') {
+        titlePage.value = {title: 'Phần mềm quản lý kho lạnh', icon: CubeIcon}
+      }
+    }
+);
 
 // Handle submenu click
 const handleSubmenuClick = (link: string, title: string, icon: string) => {
-  setTitlePage(title,icon);
+  setTitlePage(title, icon);
   router.push(link);
 };
 
@@ -325,6 +350,7 @@ const handleLogout = () => {
   max-width: 1200px;
   margin: 0 auto;
 }
+
 .icon {
   width: 24px;
   height: 24px;

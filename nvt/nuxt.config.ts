@@ -1,4 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config'
+import any from "async-validator/dist-types/validator/any";
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
