@@ -89,6 +89,7 @@ import {useRouter, useRoute} from 'vue-router';
 import {
   Cog6ToothIcon, CogIcon, WrenchScrewdriverIcon, PlusCircleIcon, MinusCircleIcon, ReceiptRefundIcon,
   CubeIcon, Bars3Icon, UserCircleIcon, InformationCircleIcon, ArrowRightOnRectangleIcon, HomeIcon,
+  UserGroupIcon,
 } from '@heroicons/vue/24/outline';
 // State quản lý mở hoặc đóng sidebar
 const isSidebarOpen = ref(true);
@@ -119,8 +120,8 @@ const menuItems = ref([
     title: 'Quản trị',
     icon: Cog6ToothIcon, // Tên icon cho mục menu chính
     submenus: [
+      {title: 'Quản lý tài khoản', link: '/user', icon: UserGroupIcon},
       {title: 'Sơ đồ kho', link: '/warehouse-layout', icon: CubeIcon},
-      {title: 'Submenu 2', link: '/', icon: 'menu-icon-2'},
     ],
   },
   {
@@ -172,7 +173,6 @@ const route = useRoute();
 watch(
     () => route.fullPath, // Theo dõi sự thay đổi của đường dẫn đầy đủ
     (newUrl, oldUrl) => {
-      console.log("newUrl",newUrl)
       if(newUrl === '/') {
         titlePage.value = {title: 'Phần mềm quản lý kho lạnh', icon: CubeIcon}
       }
@@ -322,7 +322,7 @@ const handleLogout = () => {
   background-color: transparent; /* Very light blue */
   transition: background-color 0.3s;
   display: flex;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .submenu-item:hover {

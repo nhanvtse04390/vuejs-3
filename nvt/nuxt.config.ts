@@ -1,5 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config'
-import any from "async-validator/dist-types/validator/any";
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
@@ -7,7 +7,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE_URL,
+      baseURL: process.env.NUXT_PUBLIC_API_BASE,
     },
     plugins: [
       '~/plugins/vue3-toastify.client.js',

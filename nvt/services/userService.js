@@ -4,6 +4,7 @@ import apiClient from './apiService';
 
 // Hàm gọi API để đăng nhập
 export const loginUser = async (credentials) => {
+    console.log("apiClient",apiClient)
     const response = await apiClient.post('/login', credentials);
     return response.data;
 };
