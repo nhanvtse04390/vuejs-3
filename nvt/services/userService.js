@@ -11,13 +11,29 @@ export const loginUser = async (credentials) => {
 
 // Hàm lấy danh sách người dùng
 export const getUsers = async () => {
-    const response = await apiClient.get('/users');
-    return response.data;
+    try {
+        const response = await apiClient.get('/users');
+
+        // Kiểm tra trạng thái phản hồi
+        if (response.status === 200) {
+            // Nếu có dữ liệu, trả về dữ liệu
+            return response.data;
+        } else {
+            // Nếu trạng thái không phải 200 OK, xử lý lỗi
+            console.error(`Unexpected status code: ${response.status}`);
+            throw new Error(`Unexpected status code: ${response.status}`);
+        }
+    } catch (error) {
+        // Xử lý lỗi khi gửi yêu cầu hoặc phản hồi không thành công
+        console.error('Error fetching users:', error.message);
+        // Tuỳ thuộc vào nhu cầu, bạn có thể throw lại lỗi hoặc trả về giá trị mặc định
+        throw error; // Hoặc return default value if preferred
+    }
 };
 
 // Hàm tạo người dùng mới
 export const createUser = async (userData) => {
-    const response = await apiClient.post('/users', userData);
+    const response = await apiClient.post('/register', userData);
     return response.data;
 };
 

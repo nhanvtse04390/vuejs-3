@@ -1,150 +1,70 @@
 <template>
   <div>
+    <el-button @click="isDialogVisibleRegister = true" type="primary" :icon="Edit" plain>Đăng ký</el-button>
     <!-- Element Plus Table -->
     <el-table
         :data="rowData"
         style="width: 100%; overflow-x: auto;"
         @cell-click=""
     >
+
+      <!-- Existing table columns -->
       <el-table-column
           prop="id"
           label="ID"
           width="80"
       />
+      <!-- Other columns... -->
       <el-table-column
-          prop="rowName"
-          label="Row Name"
-          width="150"
-          editable
-      />
-      <el-table-column
-          prop="storagePosition"
-          label="Storage Position"
-          width="150"
-          editable
-      />
-      <el-table-column
-          prop="rowNumber"
-          label="Row Number"
-          width="120"
-          editable
-      />
-      <el-table-column
-          prop="sequenceNumber"
-          label="Sequence Number"
-          width="120"
-          editable
-      />
-      <el-table-column
-          prop="level"
-          label="Level"
-          width="100"
-          editable
-      />
-      <el-table-column
-          prop="inUse"
-          label="In Use"
-          width="100"
-          editable
-      />
-      <el-table-column
-          prop="notes"
-          label="Notes"
+          label="Tùy chỉnh"
           width="200"
-          editable
-      />
-      <el-table-column
-          prop="code"
-          label="Code"
-          width="120"
-          editable
-      />
-      <el-table-column
-          prop="topValue"
-          label="Top Value"
-          width="120"
-          editable
-      />
-      <el-table-column
-          prop="lowValue"
-          label="Low Value"
-          width="120"
-          editable
-      />
-      <el-table-column
-          prop="extraInfo"
-          label="Extra Info"
-          width="200"
-          editable
-      />
-      <el-table-column
-          prop="store"
-          label="Store"
-          width="150"
-          editable
-      />
-      <el-table-column
-          prop="lockStatus"
-          label="Lock Status"
-          width="150"
-          editable
-      />
-      <el-table-column
-          prop="createdName"
-          label="Created Name"
-          width="150"
-      />
-      <el-table-column
-          prop="createdAt"
-          label="Created At"
-          width="180"
-      />
-      <el-table-column
-          label="Edit"
-          width="100"
       >
         <template v-slot="scope">
-          <el-button @click="handleEditClick(scope.row)">Edit</el-button>
+          <el-button @click="handleEditClick(scope.row)">Chi tiết</el-button>
+          <el-button @click="handleEditClick(scope.row)">Chỉnh sửa</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- Element Plus Dialog -->
-    <el-dialog
-        title="Confirm Edit"
-        :visible.sync="isDialogVisible"
-        width="30%"
-        @close="handleDialogClose"
-    >
-      <p>Are you sure you want to save the changes?</p>
-      <span class="dialog-footer">
-        <el-button @click="handleDialogClose">Cancel</el-button>
-        <el-button type="primary" @click="handleConfirmEdit">Confirm</el-button>
-      </span>
+    <el-dialog v-model="isDialogVisibleInfo" width="800">
+      <account-info></account-info>
+    </el-dialog>
+
+    <el-dialog v-model="isDialogVisibleRegister" center title="Tạo tài khoản mới" width="800">
+      <register-account></register-account>
+      <template #header>
+        <div class="uppercase flex justify-center font-bold">
+          Tạo tài khoản mới
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import 'element-plus/dist/index.css';
-import {getUsers} from "@/services/userService.js";
+import {ElButton, ElDialog} from 'element-plus';
+import {getUsers} from '@/services/userService.js';
+import { Edit } from '@element-plus/icons-vue'
+
 definePageMeta({
   middleware: 'auth',
+  name: 'UserIndex'
 });
+
 // Row Data
 const rowData = ref([]);
 
 // Dialog visibility state
-const isDialogVisible = ref(false);
+const isDialogVisibleInfo = ref(false);
+const isDialogVisibleRegister = ref(false)
 const editedRowData = ref(null);
 
 // Fetch data from API
 const fetchData = async () => {
   try {
     const response = await getUsers();
-    console.log("response",response)
     rowData.value = response.data;
   } catch (error) {
     console.error('Fetch data error:', error);
@@ -158,26 +78,14 @@ onMounted(() => {
 
 // Handle edit button click
 const handleEditClick = (row) => {
-  editedRowData.value = { ...row };
-  isDialogVisible.value = true;
+  editedRowData.value = {...row};
+  isDialogVisibleInfo.value = true;
 };
 
-// Handle dialog close
-const handleDialogClose = () => {
-  isDialogVisible.value = false;
-  editedRowData.value = null;
+const handleRegister = () => {
+
 };
 
-// Handle confirm edit
-const handleConfirmEdit = async () => {
-  try {
-    // Call your API to save changes here
-    // Example: await saveEditedRowData(editedRowData.value);
-    isDialogVisible.value = false;
-  } catch (error) {
-    console.error('Save edit error:', error);
-  }
-};
 </script>
 
 <style scoped>

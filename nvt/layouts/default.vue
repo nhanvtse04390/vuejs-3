@@ -109,7 +109,7 @@ const toggleSubmenu = (index: number) => {
 
 const titlePage = ref({title: 'Phần mềm quản lý kho lạnh', icon: CubeIcon},);
 
-const setTitlePage = (title: string, icon: string) => {
+const setTitlePage = (title: string, icon: any) => {
   titlePage.value.title = title;
   titlePage.value.icon = icon;
 };
@@ -128,40 +128,40 @@ const menuItems = ref([
     title: 'Khai báo hệ thống',
     icon: WrenchScrewdriverIcon, // Tên icon cho mục menu chính
     submenus: [
-      {title: 'Submenu 1', link: '/about', icon: 'about-icon-1'},
-      {title: 'Submenu 2', link: '/about', icon: 'about-icon-2'},
+      {title: 'Submenu 1', link: '/about', icon: UserGroupIcon},
+      {title: 'Submenu 2', link: '/about', icon: UserGroupIcon},
     ],
   },
   {
     title: 'Quản lý vận hành kho',
     icon: CogIcon, // Tên icon cho mục menu chính
     submenus: [
-      {title: 'Submenu 1', link: '/contact', icon: 'about-icon-1'},
-      {title: 'Submenu 2', link: '/contact', icon: 'about-icon-1'},
+      {title: 'Submenu 1', link: '/contact', icon: UserGroupIcon},
+      {title: 'Submenu 2', link: '/contact', icon: UserGroupIcon},
     ],
   },
   {
     title: 'Tạo phiếu nhập hàng',
     icon: PlusCircleIcon,
     submenus: [
-      {title: 'Submenu 1', link: '/login'},
-      {title: 'Submenu 2', link: '/login'},
+      {title: 'Submenu 1', link: '/login', icon: UserGroupIcon},
+      {title: 'Submenu 2', link: '/login', icon: UserGroupIcon},
     ],
   },
   {
     title: 'Tạo phiếu xuất hàng',
     icon: MinusCircleIcon,
     submenus: [
-      {title: 'Submenu 1', link: '/login'},
-      {title: 'Submenu 2', link: '/login'},
+      {title: 'Submenu 1', link: '/login', icon: UserGroupIcon},
+      {title: 'Submenu 2', link: '/login', icon: UserGroupIcon},
     ],
   },
   {
     title: 'Chi tiết nhập xuất',
     icon: ReceiptRefundIcon,
     submenus: [
-      {title: 'Submenu 1', link: '/login'},
-      {title: 'Submenu 2', link: '/login'},
+      {title: 'Submenu 1', link: '/login', icon: UserGroupIcon},
+      {title: 'Submenu 2', link: '/login', icon: UserGroupIcon},
     ],
   },
 ]);
@@ -180,7 +180,7 @@ watch(
 );
 
 // Handle submenu click
-const handleSubmenuClick = (link: string, title: string, icon: string) => {
+const handleSubmenuClick = (link: string, title: string, icon: any) => {
   setTitlePage(title, icon);
   router.push(link);
 };
@@ -192,7 +192,7 @@ const showDetailUser = () => {
 };
 
 
-const handleClickOutside = (event) => {
+const handleClickOutside = (event : any) => {
   const menu = document.querySelector('.user-nav');
   if (menu && !menu.contains(event.target) && !event.target.closest('.relative')) {
     isShowDetailUser.value = false;
