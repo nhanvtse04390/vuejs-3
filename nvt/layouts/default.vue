@@ -22,7 +22,7 @@
         <component @click="showDetailUser" :is="UserCircleIcon" class="w-8 h-8 p-0 m-0"/>
         <nav v-if="isShowDetailUser" class="user-nav">
           <ul>
-            <li>
+            <li @click="handleShowDetailInfo()">
               <component :is="InformationCircleIcon" class="icon"/>
               Thông tin
             </li>
@@ -69,6 +69,10 @@
 
       <!-- Content Area -->
       <main class="content">
+          <account-info
+              :is-show="isDialogVisibleInfo"
+              :user-info="propUserInfo"
+          />
         <slot/>
       </main>
     </div>
@@ -91,9 +95,14 @@ import {
   CubeIcon, Bars3Icon, UserCircleIcon, InformationCircleIcon, ArrowRightOnRectangleIcon, HomeIcon,
   UserGroupIcon,
 } from '@heroicons/vue/24/outline';
+import {ElDialog} from "element-plus";
 // State quản lý mở hoặc đóng sidebar
 const isSidebarOpen = ref(true);
-
+const isDialogVisibleInfo = ref(false)
+let propUserInfo = ref()
+if(process.client) {
+  propUserInfo.value = localStorage.getItem('accountInfo');
+}
 // Biến để xác định submenu nào đang được hiển thị
 const submenuVisible = ref<number | null>(null);
 
@@ -217,6 +226,10 @@ const handleLogout = () => {
   } catch (error) {
     console.error('Error during logout:', error);
   }
+};
+
+const handleShowDetailInfo = () => {
+  isDialogVisibleInfo.value = true
 };
 </script>
 

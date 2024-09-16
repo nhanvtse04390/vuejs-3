@@ -31,7 +31,9 @@
     </el-dialog>
 
     <el-dialog v-model="isDialogVisibleRegister" center title="Tạo tài khoản mới" width="800">
-      <register-account></register-account>
+      <register-account
+          @reload="handleReload"
+      />
       <template #header>
         <div class="uppercase flex justify-center font-bold">
           Tạo tài khoản mới
@@ -82,9 +84,10 @@ const handleEditClick = (row) => {
   isDialogVisibleInfo.value = true;
 };
 
-const handleRegister = () => {
-
-};
+const handleReload = () => {
+  isDialogVisibleRegister.value = false
+  fetchData()
+}
 
 </script>
 

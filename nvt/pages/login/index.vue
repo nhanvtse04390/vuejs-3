@@ -44,6 +44,7 @@
 
 <script setup lang="ts">
 import type {AxiosError} from "axios";
+import { useAccountInfoStore } from '@/stores/accountInfoStore'
 
 definePageMeta({
   layout: false,
@@ -56,14 +57,17 @@ const email = ref('')
 const password = ref('')
 const router = useRouter()
 
+const store = useAccountInfoStore()
 const handleLogin = async () => {
   try {
     const response = await loginUser({ username: email.value, password: password.value });
-    localStorage.setItem('token', response.data); // Save the token to localStorage
+    localStorage.setItem('token', response?.data?.token); // Save the token to localStorage
+    //set store to account info
     toast.success("Đăng nhập thành công!");
 
     // Đợi 500ms rồi chuyển hướng
     setTimeout(() => {
+      store.setAccountInfo(response.data)
       router.push("/");
     }, 1000);
   } catch (err) {

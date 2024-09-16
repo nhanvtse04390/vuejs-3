@@ -9,6 +9,7 @@
         :size="formSize"
         status-icon
         label-position="left"
+        autocomplete="off"
     >
       <el-form-item label="Tên tài khoản" prop="name">
         <el-input v-model="ruleForm.name" />
@@ -16,20 +17,27 @@
       <el-form-item label="Email" prop="email">
         <el-input v-model="ruleForm.email" placeholder="vidu@gmail.com"/>
       </el-form-item>
+      <el-form-item label="Mật khẩu" prop="password">
+        <el-input v-model="ruleForm.password" type="password"/>
+      </el-form-item>
+      <el-form-item label="Xác nhận Mật khẩu" prop="confirmPassword">
+        <el-input v-model="ruleForm.confirmPassword" type="password" autocomplete="new-password"/>
+      </el-form-item>
       <el-form-item label="Số điện thoại" prop="phone">
         <el-input v-model="ruleForm.phone" />
       </el-form-item>
       <el-form-item label="Địa chỉ" prop="address">
-        <el-input v-model="ruleForm.address" />
-      </el-form-item>
-      <el-form-item label="Mật khẩu" prop="password">
-        <el-input v-model="ruleForm.password" />
-      </el-form-item>
-      <el-form-item label="Xác nhận Mật khẩu" prop="confirmPassword">
-        <el-input v-model="ruleForm.confirmPassword" />
+        <el-input v-model="ruleForm.address"/>
       </el-form-item>
       <el-form-item label="Loại tài khoản" prop="role">
-        <el-input v-model="ruleForm.role" />
+        <el-select
+            v-model="ruleForm.role"
+            placeholder="Chọn loại tài khoản"
+        >
+          <el-option label="SALE" value="SALE" />
+          <el-option label="Kế toán máy" value="KTM" />
+          <el-option label="Khách hàng" value="KH" />
+        </el-select>
       </el-form-item>
       <div class="flex justify-end">
         <el-form-item>
@@ -45,10 +53,11 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
-definePageMeta({
-  middleware: 'auth',
-  name: 'Register',
-});
+import { createUser } from '@/services/userService.js';
+import { useAccountInfoStore } from '@/stores/accountInfoStore'
+import {toast} from "vue3-toastify";
+
+const store = useAccountInfoStore()
 
 interface RuleForm {
   name: string
@@ -71,7 +80,20 @@ const ruleForm = reactive<RuleForm>({
   confirmPassword: '',
   role: '',
 })
+const emit = defineEmits(['reload'])
+const reloadFromChild = () => {
+  emit("reload")
+}
 
+const checkPass = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('Vui lòng nhập lại mật khẩu!!!'))
+  } else if (value !== ruleForm.password) {
+    callback(new Error("Mật khẩu không trùng khớp!!!"))
+  } else {
+    callback()
+  }
+}
 const rules = reactive<FormRules<RuleForm>>({
   name: [
     { required: true, message: 'Vui lòng không bỏ trống !!!', trigger: 'blur' },
@@ -85,36 +107,51 @@ const rules = reactive<FormRules<RuleForm>>({
   ],
   address: [
     { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'blur'},
-    { min: 8, max: 13, message: 'Số điện thoại từ 8 đến 13 số !!!', trigger: 'blur' },
   ],
   password: [
     { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'blur'},
   ],
   confirmPassword: [
-    { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'blur'},
+    { validator: checkPass, message:'Mật khẩu không trùng khớp!!!',trigger: 'blur' },
+  ],
+  role: [
+    { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'change'},
   ],
 })
-
-const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
-}
 
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
 }
 
-const options = Array.from({ length: 10000 }).map((_, idx) => ({
-  value: `${idx + 1}`,
-  label: `${idx + 1}`,
-}))
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+
+  await formEl.validate(async (valid, fields) => {
+    if (valid) {
+      const payload = { ...ruleForm, createBy: store.name };
+
+      try {
+        // Chờ kết quả trả về từ hàm createUser
+        const response = await createUser(payload);
+
+        if (response.status === 200) {
+          toast.success("Tạo tài khoản thành công!");
+          resetForm(formEl)
+          reloadFromChild();
+        } else {
+          toast.error(response.message || "Tạo tài khoản thất bại!!!");
+        }
+      } catch (error : any) {
+        // Xử lý lỗi nếu hàm createUser bị lỗi hoặc trả về lỗi
+        toast.error(error.response.data.message || "Đăng nhập thất bại!");
+      }
+    } else {
+      console.log("Tạo tài khoản thất bại!!!", fields);
+    }
+  });
+};
+
 </script>
 <style scoped>
 .el-form-item__content {
