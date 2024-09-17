@@ -69,10 +69,11 @@
 
       <!-- Content Area -->
       <main class="content">
+        <el-dialog v-model="isDialogVisibleInfo" width="800">
           <account-info
-              :is-show="isDialogVisibleInfo"
               :user-info="propUserInfo"
           />
+        </el-dialog>
         <slot/>
       </main>
     </div>

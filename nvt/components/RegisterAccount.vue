@@ -57,8 +57,6 @@ import { createUser } from '@/services/userService.js';
 import { useAccountInfoStore } from '@/stores/accountInfoStore'
 import {toast} from "vue3-toastify";
 
-const store = useAccountInfoStore()
-
 interface RuleForm {
   name: string
   email: string
@@ -129,7 +127,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      const payload = { ...ruleForm, createBy: store.name };
+      const storedData = localStorage.getItem('accountInfo');
+      const accountInfo = storedData ? JSON.parse(storedData) : null;
+      const payload = { ...ruleForm, createdBy: accountInfo.name };
 
       try {
         // Chờ kết quả trả về từ hàm createUser

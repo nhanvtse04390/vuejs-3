@@ -1,6 +1,5 @@
 <template>
     <!-- Main Content -->
-    <el-dialog v-show="isShow" width="800">
       <main>
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -15,40 +14,31 @@
                   <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.name }}</dd>
                 </div>
                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">Email address</dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">ngominhhoa@example.com</dd>
+                  <dt class="text-sm font-medium text-gray-500">Email</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.email }}</dd>
                 </div>
                 <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">Phone number</dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">+84 123 456 789</dd>
+                  <dt class="text-sm font-medium text-gray-500">Số điện thoại</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.phone }}</dd>
                 </div>
                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">Address</dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">123 Main St, Ho Chi Minh City</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">Account created</dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">January 1, 2020</dd>
+                  <dt class="text-sm font-medium text-gray-500">Địa chỉ</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.address }}</dd>
                 </div>
               </dl>
             </div>
           </div>
         </div>
       </main>
-    </el-dialog>
 </template>
 
 <script setup>
 
-import {ElDialog} from "element-plus";
-
 const props = defineProps({
   userInfo: String,
-  isShow: Boolean
 })
 
 const user = computed(() => {
-  console.log("isShow",isShow)
   return JSON.parse(props.userInfo)
 })
 // Any necessary setup script here
