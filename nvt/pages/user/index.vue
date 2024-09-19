@@ -1,7 +1,73 @@
 <template>
   <div>
-    <el-button @click="isDialogVisibleRegister = true" type="primary" :icon="Edit" plain class="mb-2">Đăng ký
-    </el-button>
+    <div>
+      <el-button @click="isDialogVisibleRegister = true" type="primary" :icon="Edit" plain class="mb-2">Đăng ký
+      </el-button>
+      <el-button @click="isVisibleSearchForm = !isVisibleSearchForm" type="primary" :icon="Search" plain class="mb-2">
+        Tìm kiếm
+      </el-button>
+    </div>
+
+    <div v-show="isVisibleSearchForm" class="search-form">
+      <el-form>
+        <el-row :gutter="20">
+          <el-col :span="3">
+            <el-form-item label="Tên" label-position="top">
+              <el-input v-model="searchForm.name"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item label="Mail" label-position="top">
+              <el-input v-model="searchForm.email"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item label="Số điện thoại" label-position="top">
+              <el-input v-model="searchForm.phone"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item label="Người tạo" label-position="top">
+              <el-input v-model="searchForm.createdBy"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item label="Ngày tạo" label-position="top">
+              <el-date-picker
+                  v-model="searchForm.createdAt"
+                  type="date"
+                  aria-label="Chọn ngày"
+                  placeholder="Chọn ngày"
+                  style="width: 100%"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item label="Người sửa" label-position="top">
+              <el-input v-model="searchForm.updatedBy"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item label="Ngày sửa" label-position="top">
+              <el-date-picker
+                  v-model="searchForm.updatedAt"
+                  type="date"
+                  aria-label="Chọn ngày"
+                  placeholder="Chọn ngày"
+                  style="width: 100%"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item label="Hành động" label-position="top">
+              <el-button type="warning" :icon="Refresh" @click="refreshSearch" plain>Tạo lại</el-button>
+              <el-button type="primary" :icon="Search" @click="fetchData" plain>Tìm kiếm</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
+
     <el-table
         :data="rowData"
         style="width: 100%; overflow-x: auto;"
@@ -97,7 +163,7 @@ import {onMounted, ref} from 'vue';
 import 'element-plus/dist/index.css';
 import {ElButton, ElDialog} from 'element-plus';
 import {getUsers} from '@/services/userService.js';
-import {Edit} from '@element-plus/icons-vue'
+import {Edit, Search, Refresh} from '@element-plus/icons-vue'
 import moment from 'moment';
 
 definePageMeta({
@@ -112,14 +178,23 @@ const rowData = ref([]);
 const isDialogVisibleInfo = ref(false);
 const isDialogVisibleRegister = ref(false)
 const editedRowData = ref(null);
-const search = ref('')
+const isVisibleSearchForm = ref(false)
 // Fetch data from API
 const isPending = ref(false); // Tạo biến ref để lưu trạng thái pending
+const searchForm = ref({
+  name: '',
+  email: '',
+  phone: '',
+  createdBy: '',
+  createdAt: '',
+  updatedBy: '',
+  updatedAt: '',
+})
 
 const fetchData = async () => {
   try {
     isPending.value = true; // Bắt đầu loading
-    const {data: response} = await getUsers();
+    const {data: response} = await getUsers(searchForm.value);
     rowData.value = response.map(data => ({
       ...data,
       createdAtShow: data.createdAt ? moment(data.createdAt).format("DD-MM-YYYY HH:mm") : ''
@@ -129,6 +204,19 @@ const fetchData = async () => {
   } finally {
     isPending.value = false; // Kết thúc loading dù có lỗi hay không
   }
+};
+
+const refreshSearch = () => {
+  searchForm.value = {
+    name: '',
+    email: '',
+    phone: '',
+    createdBy: '',
+    createdAt: '',
+    updatedBy: '',
+    updatedAt: '',
+  }
+  fetchData()
 };
 
 // On component mounted
@@ -152,5 +240,14 @@ const handleReload = () => {
 <style scoped>
 .pagination-block {
   margin-top: 10px;
+}
+
+.search-form {
+  opacity: 0.75;
+  border: 1px solid #d3d6db;
+  padding: 20px 10px 10px 10px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  background-color: #f0f2f5;
 }
 </style>

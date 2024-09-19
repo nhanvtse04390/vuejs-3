@@ -10,9 +10,13 @@ export const loginUser = async (credentials) => {
 };
 
 // Hàm lấy danh sách người dùng
-export const getUsers = async () => {
+export const getUsers = async (params = {}) => {
     try {
-        const response = await apiClient.get('/users');
+        // Tạo chuỗi truy vấn từ các tham số tìm kiếm
+        const queryParams = new URLSearchParams(params).toString();
+
+        // Gửi yêu cầu GET với các tham số tìm kiếm
+        const response = await apiClient.get(`/users?${queryParams}`);
 
         // Kiểm tra trạng thái phản hồi
         if (response.status === 200) {

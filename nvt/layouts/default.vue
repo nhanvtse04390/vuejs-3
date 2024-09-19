@@ -254,7 +254,7 @@ const handleShowDetailInfo = () => {
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
-  position: relative; /* Position relative to place toggle button correctly */
+  position: fixed; /* Position relative to place toggle button correctly */
   z-index: 999; /* Ensure header is below the toggle button */
   display: flex;
   justify-content: space-between;
@@ -279,6 +279,7 @@ const handleShowDetailInfo = () => {
   display: flex;
   flex: 1;
   overflow: hidden; /* Prevent horizontal scroll */
+  margin-top: 70px;
 }
 
 /* Sidebar */

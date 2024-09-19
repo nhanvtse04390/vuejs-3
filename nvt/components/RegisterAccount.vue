@@ -12,7 +12,7 @@
         autocomplete="off"
     >
       <el-form-item label="Tên tài khoản" prop="name">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="ruleForm.name"/>
       </el-form-item>
       <el-form-item label="Email" prop="email">
         <el-input v-model="ruleForm.email" placeholder="vidu@gmail.com"/>
@@ -24,7 +24,7 @@
         <el-input v-model="ruleForm.confirmPassword" type="password" autocomplete="new-password"/>
       </el-form-item>
       <el-form-item label="Số điện thoại" prop="phone">
-        <el-input v-model="ruleForm.phone" />
+        <el-input v-model="ruleForm.phone"/>
       </el-form-item>
       <el-form-item label="Địa chỉ" prop="address">
         <el-input v-model="ruleForm.address"/>
@@ -34,9 +34,9 @@
             v-model="ruleForm.role"
             placeholder="Chọn loại tài khoản"
         >
-          <el-option label="SALE" value="SALE" />
-          <el-option label="Kế toán máy" value="KTM" />
-          <el-option label="Khách hàng" value="KH" />
+          <el-option label="SALE" value="SALE"/>
+          <el-option label="Kế toán máy" value="KTM"/>
+          <el-option label="Khách hàng" value="KH"/>
         </el-select>
       </el-form-item>
       <div class="flex justify-end">
@@ -51,11 +51,11 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
-import { createUser } from '@/services/userService.js';
-import { useAccountInfoStore } from '@/stores/accountInfoStore'
+import {reactive, ref} from 'vue'
+import type {ComponentSize, FormInstance, FormRules} from 'element-plus'
+import {createUser} from '@/services/userService.js';
 import {toast} from "vue3-toastify";
+import message from "@/define/message";
 
 interface RuleForm {
   name: string
@@ -85,35 +85,35 @@ const reloadFromChild = () => {
 
 const checkPass = (rule: any, value: any, callback: any) => {
   if (value === '') {
-    callback(new Error('Vui lòng nhập lại mật khẩu!!!'))
+    callback(new Error(message.VALIDATE.PASSWORD_RETYPE))
   } else if (value !== ruleForm.password) {
-    callback(new Error("Mật khẩu không trùng khớp!!!"))
+    callback(new Error(message.VALIDATE.PASSWORD_NOT_MATCH))
   } else {
     callback()
   }
 }
 const rules = reactive<FormRules<RuleForm>>({
   name: [
-    { required: true, message: 'Vui lòng không bỏ trống !!!', trigger: 'blur' },
+    {required: true, message: message.VALIDATE.NOT_EMPTY, trigger: 'blur'},
   ],
   email: [
-    { required: true, type: "email", message:'Vui lòng nhập email !!!', trigger: 'blur'}
+    {required: true, type: "email", message: message.VALIDATE.NOT_EMPTY_EMAIL, trigger: 'blur'}
   ],
   phone: [
-    { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'blur'},
-    { min: 8, max: 13, message: 'Số điện thoại từ 8 đến 13 số !!!', trigger: 'blur' },
+    {required: true, message: message.VALIDATE.NOT_EMPTY, trigger: 'blur'},
+    {min: 8, max: 13, message: message.VALIDATE.PHONE, trigger: 'blur'},
   ],
   address: [
-    { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'blur'},
+    {required: true, message: message.VALIDATE.NOT_EMPTY, trigger: 'blur'},
   ],
   password: [
-    { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'blur'},
+    {required: true, message: message.VALIDATE.NOT_EMPTY, trigger: 'blur'},
   ],
   confirmPassword: [
-    { validator: checkPass, message:'Mật khẩu không trùng khớp!!!',trigger: 'blur' },
+    {validator: checkPass, message: message.VALIDATE.PASSWORD_NOT_MATCH, trigger: 'blur'},
   ],
   role: [
-    { required: true, message:'Vui lòng không bỏ trống !!!', trigger: 'change'},
+    {required: true, message: message.VALIDATE.NOT_EMPTY, trigger: 'change'},
   ],
 })
 
@@ -129,22 +129,22 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       const storedData = localStorage.getItem('accountInfo');
       const accountInfo = storedData ? JSON.parse(storedData) : null;
-      const payload = { ...ruleForm, createdBy: accountInfo.name };
+      const payload = {...ruleForm, createdBy: accountInfo.name};
 
       try {
         // Chờ kết quả trả về từ hàm createUser
         const response = await createUser(payload);
 
         if (response.status === 200) {
-          toast.success("Tạo tài khoản thành công!");
+          toast.success(message.SUCCESS.CREATE);
           resetForm(formEl)
           reloadFromChild();
         } else {
-          toast.error(response.message || "Tạo tài khoản thất bại!!!");
+          toast.error(response.message || message.ERROR.CREATE);
         }
-      } catch (error : any) {
+      } catch (error: any) {
         // Xử lý lỗi nếu hàm createUser bị lỗi hoặc trả về lỗi
-        toast.error(error.response.data.message || "Đăng nhập thất bại!");
+        toast.error(error.response.data.message || message.ERROR.FETCH);
       }
     } else {
       console.log("Tạo tài khoản thất bại!!!", fields);

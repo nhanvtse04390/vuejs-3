@@ -52,6 +52,7 @@ definePageMeta({
 import { ref } from 'vue'
 import { loginUser } from '@/services/userService';
 import { toast } from "vue3-toastify";
+import message from "@/define/message";
 
 const email = ref('')
 const password = ref('')
@@ -63,7 +64,7 @@ const handleLogin = async () => {
     const response = await loginUser({ username: email.value, password: password.value });
     localStorage.setItem('token', response?.data?.token); // Save the token to localStorage
     //set store to account info
-    toast.success("Đăng nhập thành công!");
+    toast.success(message.SUCCESS.LOGIN);
 
     // Đợi 500ms rồi chuyển hướng
     setTimeout(() => {
@@ -74,10 +75,10 @@ const handleLogin = async () => {
     const error = err as AxiosError; // Ép kiểu err thành AxiosError
     // Kiểm tra nếu response từ backend có message
     if (error.response && error.response.data) {
-      const { message } = error.response.data as { message: string }; // Giả sử message là string
-      toast.error(message || "Đăng nhập thất bại!");
+      const { mess } = error.response.data as { mess: string }; // Giả sử message là string
+      toast.error(mess || message.ERROR.LOGIN);
     } else {
-      toast.error("Có lỗi xảy ra, vui lòng thử lại!");
+      toast.error(message.ERROR.FETCH);
     }
   }
 

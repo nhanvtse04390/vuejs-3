@@ -1,9 +1,10 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    if (process.client) {
-        const token = localStorage.getItem('token');
 
-        if (!token) {
-            return navigateTo('/login');
+    if (process.client) { // Kiểm tra nếu đang ở phía client
+        const token = localStorage.getItem('token'); // Lấy token từ localStorage
+
+        if (!token) { // Nếu không có token
+            return navigateTo('/login'); // Điều hướng đến trang login
         }
     }
-}, { override: true }); // Gán override: true nếu cần thay thế middleware mặc định
+});
