@@ -69,11 +69,11 @@
 
       <!-- Content Area -->
       <main class="content">
-        <el-dialog v-model="isDialogVisibleInfo" width="800">
-          <account-info
-              :user-info="propUserInfo"
-          />
-        </el-dialog>
+        <account-info
+            :isVisible="isDialogVisibleInfo"
+            @close="togglePopup"
+            :user-info="propUserInfo"
+        />
         <slot/>
       </main>
     </div>
@@ -101,8 +101,9 @@ import {ElDialog} from "element-plus";
 const isSidebarOpen = ref(true);
 const isDialogVisibleInfo = ref(false)
 let propUserInfo = ref()
-if(process.client) {
-  propUserInfo.value = localStorage.getItem('accountInfo');
+if (process.client) {
+  const accountInfo = localStorage.getItem('accountInfo')
+  propUserInfo.value = JSON.parse(accountInfo || '');
 }
 // Biến để xác định submenu nào đang được hiển thị
 const submenuVisible = ref<number | null>(null);
@@ -183,7 +184,7 @@ const route = useRoute();
 watch(
     () => route.fullPath, // Theo dõi sự thay đổi của đường dẫn đầy đủ
     (newUrl, oldUrl) => {
-      if(newUrl === '/') {
+      if (newUrl === '/') {
         titlePage.value = {title: 'Phần mềm quản lý kho lạnh', icon: CubeIcon}
       }
     }
@@ -202,7 +203,7 @@ const showDetailUser = () => {
 };
 
 
-const handleClickOutside = (event : any) => {
+const handleClickOutside = (event: any) => {
   const menu = document.querySelector('.user-nav');
   if (menu && !menu.contains(event.target) && !event.target.closest('.relative')) {
     isShowDetailUser.value = false;
@@ -231,6 +232,10 @@ const handleLogout = () => {
 
 const handleShowDetailInfo = () => {
   isDialogVisibleInfo.value = true
+};
+
+const togglePopup = () => {
+  isDialogVisibleInfo.value = false;
 };
 </script>
 

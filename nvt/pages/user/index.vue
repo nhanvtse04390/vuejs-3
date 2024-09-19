@@ -12,54 +12,54 @@
       <el-form>
         <el-row :gutter="20">
           <el-col :span="3">
-            <el-form-item label="Tên" label-position="top">
-              <el-input v-model="searchForm.name"/>
+            <el-form-item label-position="top">
+              <el-input v-model="searchForm.name" placeholder="Tên"/>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item label="Mail" label-position="top">
-              <el-input v-model="searchForm.email"/>
+            <el-form-item label-position="top">
+              <el-input v-model="searchForm.email" placeholder="Mail"/>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item label="Số điện thoại" label-position="top">
-              <el-input v-model="searchForm.phone"/>
+            <el-form-item label-position="top">
+              <el-input v-model="searchForm.phone" placeholder="Số điện thoại"/>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item label="Người tạo" label-position="top">
-              <el-input v-model="searchForm.createdBy"/>
+            <el-form-item label-position="top">
+              <el-input v-model="searchForm.createdBy" placeholder="Người tạo"/>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item label="Ngày tạo" label-position="top">
+            <el-form-item label-position="top">
               <el-date-picker
                   v-model="searchForm.createdAt"
                   type="date"
-                  aria-label="Chọn ngày"
-                  placeholder="Chọn ngày"
+                  aria-label="Ngày tạo"
+                  placeholder="Ngày tạo"
                   style="width: 100%"
               />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item label="Người sửa" label-position="top">
-              <el-input v-model="searchForm.updatedBy"/>
+            <el-form-item label-position="top">
+              <el-input v-model="searchForm.updatedBy" placeholder="Mail"/>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item label="Ngày sửa" label-position="top">
+            <el-form-item label-position="top">
               <el-date-picker
                   v-model="searchForm.updatedAt"
                   type="date"
-                  aria-label="Chọn ngày"
-                  placeholder="Chọn ngày"
+                  aria-label="Ngày sửa"
+                  placeholder="Ngày sửa"
                   style="width: 100%"
               />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item label="Hành động" label-position="top">
+            <el-form-item label-position="top">
               <el-button type="warning" :icon="Refresh" @click="refreshSearch" plain>Tạo lại</el-button>
               <el-button type="primary" :icon="Search" @click="fetchData" plain>Tìm kiếm</el-button>
             </el-form-item>
@@ -143,9 +143,11 @@
     </div>
   </div>
   <!-- Element Plus Table -->
-  <el-dialog v-model="isDialogVisibleInfo" width="800">
-    <account-info></account-info>
-  </el-dialog>
+  <account-info
+      :isVisible="isDialogVisibleInfo"
+      :user-info="propUserInfo"
+      @close="togglePopup"
+  />
   <el-dialog v-model="isDialogVisibleRegister" center title="Tạo tài khoản mới" width="800">
     <register-account
         @reload="handleReload"
@@ -177,8 +179,8 @@ const rowData = ref([]);
 // Dialog visibility state
 const isDialogVisibleInfo = ref(false);
 const isDialogVisibleRegister = ref(false)
-const editedRowData = ref(null);
 const isVisibleSearchForm = ref(false)
+const propUserInfo = ref()
 // Fetch data from API
 const isPending = ref(false); // Tạo biến ref để lưu trạng thái pending
 const searchForm = ref({
@@ -226,14 +228,18 @@ onMounted(() => {
 
 // Handle edit button click
 const handleEditClick = (row) => {
-  editedRowData.value = {...row};
+  propUserInfo.value = row;
   isDialogVisibleInfo.value = true;
 };
 
 const handleReload = () => {
   isDialogVisibleRegister.value = false
   fetchData()
-}
+};
+
+const togglePopup = () => {
+  isDialogVisibleInfo.value = false;
+};
 
 </script>
 
@@ -243,9 +249,8 @@ const handleReload = () => {
 }
 
 .search-form {
-  opacity: 0.75;
   border: 1px solid #d3d6db;
-  padding: 20px 10px 10px 10px;
+  padding: 20px 10px 0 10px;
   margin-bottom: 20px;
   border-radius: 6px;
   background-color: #f0f2f5;
