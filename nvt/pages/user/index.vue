@@ -1,15 +1,22 @@
 <template>
   <div>
-    <div class="flex items-center mb-2">
-      <el-input v-model="searchForm.email" style="width: 240px; margin-right: auto;" placeholder="Tìm kiếm theo email" />
-      <el-button type="primary" :icon="Search" @click="fetchData" style="margin-right: auto;" plain>Tìm kiếm</el-button>
-      <el-button @click="isVisibleSearchForm = !isVisibleSearchForm" type="primary" :icon="Search" plain >
-        Tìm kiếm nâng cao
-      </el-button>
-      <el-button @click="isDialogVisibleRegister = true" type="primary" :icon="Edit" plain >
-        Đăng ký
-      </el-button>
-    </div>
+    <el-row class="mb-3">
+      <el-col :span="12">
+        <el-input v-model="searchForm.email" style="width: 240px;" placeholder="Tìm kiếm theo email" class="mr-2"/>
+        <el-button type="primary" :icon="Search" @click="fetchData" plain>Tìm kiếm</el-button>
+      </el-col>
+      <el-col :span="12" >
+        <div class="flex justify-end">
+          <el-button @click="isVisibleSearchForm = !isVisibleSearchForm" type="primary" :icon="Search" plain>
+            Tìm kiếm nâng cao
+          </el-button>
+          <el-button @click="isDialogVisibleRegister = true" type="primary" :icon="Edit" plain>
+            Đăng ký
+          </el-button>
+        </div>
+      </el-col>
+    </el-row>
+
 
     <div v-show="isVisibleSearchForm" class="search-form">
       <el-form>
