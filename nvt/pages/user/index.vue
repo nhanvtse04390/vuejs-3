@@ -1,10 +1,13 @@
 <template>
   <div>
-    <div>
-      <el-button @click="isDialogVisibleRegister = true" type="primary" :icon="Edit" plain class="mb-2">Đăng ký
+    <div class="flex items-center mb-2">
+      <el-input v-model="searchForm.email" style="width: 240px; margin-right: auto;" placeholder="Tìm kiếm theo email" />
+      <el-button type="primary" :icon="Search" @click="fetchData" style="margin-right: auto;" plain>Tìm kiếm</el-button>
+      <el-button @click="isVisibleSearchForm = !isVisibleSearchForm" type="primary" :icon="Search" plain >
+        Tìm kiếm nâng cao
       </el-button>
-      <el-button @click="isVisibleSearchForm = !isVisibleSearchForm" type="primary" :icon="Search" plain class="mb-2">
-        Tìm kiếm
+      <el-button @click="isDialogVisibleRegister = true" type="primary" :icon="Edit" plain >
+        Đăng ký
       </el-button>
     </div>
 
@@ -44,7 +47,7 @@
           </el-col>
           <el-col :span="3">
             <el-form-item label-position="top">
-              <el-input v-model="searchForm.updatedBy" placeholder="Mail"/>
+              <el-input v-model="searchForm.updatedBy" placeholder="Người sửa"/>
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -58,6 +61,9 @@
               />
             </el-form-item>
           </el-col>
+
+        </el-row>
+        <el-row justify="center">
           <el-col :span="3">
             <el-form-item label-position="top">
               <el-button type="warning" :icon="Refresh" @click="refreshSearch" plain>Tạo lại</el-button>
@@ -148,7 +154,7 @@
       :user-info="propUserInfo"
       @close="togglePopup"
   />
-  <el-dialog v-model="isDialogVisibleRegister" center title="Tạo tài khoản mới" width="800">
+  <el-dialog v-model="isDialogVisibleRegister" center title="Tạo tài khoản mới" width="600">
     <register-account
         @reload="handleReload"
     />
